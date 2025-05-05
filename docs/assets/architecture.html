@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bi-Co-Pilot Animated Architecture</title>
+    <style>
+        /* Modern styling with smooth animations */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            padding: 2rem;
+        }
+        
+        .architecture {
+            width: 900px;
+            height: 600px;
+            position: relative;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .component {
+            position: absolute;
+            border-radius: 12px;
+            padding: 1rem;
+            color: white;
+            font-weight: bold;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.5s ease;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            transform: scale(1);
+            opacity: 0.95;
+        }
+        
+        .component:hover {
+            transform: scale(1.05);
+            opacity: 1;
+            z-index: 10;
+        }
+        
+        .component i {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Component-specific styling */
+        .user {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #FF6B6B 0%, #FF8E8E 100%);
+            top: 50px;
+            left: 50px;
+        }
+        
+        .hcp {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, #4ECDC4 0%, #88F3ED 100%);
+            top: 200px;
+            left: 250px;
+        }
+        
+        .mcp {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, #FFE66D 0%, #FFF4B1 100%);
+            top: 200px;
+            left: 550px;
+        }
+        
+        .synapse {
+            width: 300px;
+            height: 100px;
+            background: linear-gradient(135deg, #A5D8FF 0%, #D0EBFF 100%);
+            top: 350px;
+            left: 300px;
+            color: #333;
+        }
+        
+        .monitoring {
+            width: 180px;
+            height: 120px;
+            background: linear-gradient(135deg, #B2F2BB 0%, #D8F5DC 100%);
+            top: 50px;
+            left: 650px;
+            color: #333;
+        }
+        
+        /* Animated connectors */
+        .connector {
+            position: absolute;
+            background: #adb5bd;
+            z-index: -1;
+            transform-origin: left center;
+            height: 4px;
+        }
+        
+        .connector.active {
+            background: #4cc9f0;
+            box-shadow: 0 0 10px rgba(76, 201, 240, 0.7);
+        }
+        
+        /* Animation controls */
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+        
+        button {
+            background: #4ECDC4;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        button:hover {
+            background: #3aa8a0;
+            transform: translateY(-2px);
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="architecture">
+        <!-- Components -->
+        <div class="component user" id="user">
+            <i class="fas fa-user"></i>
+            <span>User</span>
+        </div>
+        
+        <div class="component hcp" id="hcp">
+            <i class="fas fa-robot"></i>
+            <span>Human Co-Pilot</span>
+            <small>Natural Language Interface</small>
+        </div>
+        
+        <div class="component mcp" id="mcp">
+            <i class="fas fa-brain"></i>
+            <span>Machine Co-Pilot</span>
+            <small>Model Optimization</small>
+        </div>
+        
+        <div class="component synapse" id="synapse">
+            <i class="fas fa-sync-alt"></i>
+            <span>Synapse Core</span>
+            <small>Bidirectional API</small>
+        </div>
+        
+        <div class="component monitoring" id="monitoring">
+            <i class="fas fa-chart-line"></i>
+            <span>Monitoring</span>
+            <small>Prometheus + Grafana</small>
+        </div>
+        
+        <!-- Connectors -->
+        <div class="connector" id="conn1" style="width: 150px; top: 110px; left: 170px; transform: rotate(10deg);"></div>
+        <div class="connector" id="conn2" style="width: 150px; top: 300px; left: 450px; transform: rotate(-10deg);"></div>
+        <div class="connector" id="conn3" style="width: 300px; top: 400px; left: 300px;"></div>
+        <div class="connector" id="conn4" style="width: 150px; top: 110px; left: 530px; transform: rotate(-10deg);"></div>
+        <div class="connector" id="conn5" style="width: 200px; top: 260px; left: 350px; transform: rotate(90deg);"></div>
+        
+        <!-- Controls -->
+        <div class="controls">
+            <button id="animateBtn"><i class="fas fa-play"></i> Animate Flow</button>
+            <button id="resetBtn"><i class="fas fa-undo"></i> Reset</button>
+        </div>
+    </div>
+
+    <script>
+        // Animation logic
+        const components = {
+            user: document.getElementById('user'),
+            hcp: document.getElementById('hcp'),
+            mcp: document.getElementById('mcp'),
+            synapse: document.getElementById('synapse'),
+            monitoring: document.getElementById('monitoring')
+        };
+        
+        const connectors = [
+            document.getElementById('conn1'),
+            document.getElementById('conn2'),
+            document.getElementById('conn3'),
+            document.getElementById('conn4'),
+            document.getElementById('conn5')
+        ];
+        
+        const animateBtn = document.getElementById('animateBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        
+        // Animation sequence
+        const animationSequence = [
+            { target: 'conn1', duration: 1000, delay: 500 },
+            { target: 'hcp', duration: 800, delay: 0, effect: 'pulse' },
+            { target: 'conn5', duration: 1000, delay: 500 },
+            { target: 'mcp', duration: 800, delay: 0, effect: 'pulse' },
+            { target: 'conn2', duration: 1000, delay: 500 },
+            { target: 'hcp', duration: 800, delay: 0, effect: 'pulse' },
+            { target: 'conn3', duration: 1200, delay: 500 },
+            { target: 'synapse', duration: 1000, delay: 0, effect: 'pulse' },
+            { target: 'conn4', duration: 1000, delay: 500 },
+            { target: 'monitoring', duration: 800, delay: 0, effect: 'pulse' }
+        ];
+        
+        // Animation controller
+        function animateFlow() {
+            let delay = 0;
+            
+            animationSequence.forEach((step, index) => {
+                setTimeout(() => {
+                    const element = step.target.startsWith('conn') 
+                        ? document.getElementById(step.target)
+                        : components[step.target];
+                    
+                    if (step.target.startsWith('conn')) {
+                        element.classList.add('active');
+                    } else if (step.effect === 'pulse') {
+                        element.style.transform = 'scale(1.1)';
+                        setTimeout(() => {
+                            element.style.transform = 'scale(1)';
+                        }, step.duration);
+                    }
+                    
+                    // Reset connectors at the end
+                    if (index === animationSequence.length - 1) {
+                        setTimeout(() => {
+                            connectors.forEach(conn => conn.classList.remove('active'));
+                        }, 1500);
+                    }
+                }, delay);
+                
+                delay += step.duration + step.delay;
+            });
+        }
+        
+        // Event listeners
+        animateBtn.addEventListener('click', animateFlow);
+        
+        resetBtn.addEventListener('click', () => {
+            connectors.forEach(conn => conn.classList.remove('active'));
+            Object.values(components).forEach(comp => {
+                comp.style.transform = 'scale(1)';
+            });
+        });
+        
+        // Interactive hover effects
+        Object.entries(components).forEach(([key, comp]) => {
+            comp.addEventListener('mouseenter', () => {
+                document.querySelectorAll('.connector').forEach(conn => conn.style.opacity = '0.3');
+                
+                // Highlight related connectors
+                switch(key) {
+                    case 'user':
+                        document.getElementById('conn1').style.opacity = '1';
+                        break;
+                    case 'hcp':
+                        document.getElementById('conn1').style.opacity = '1';
+                        document.getElementById('conn5').style.opacity = '1';
+                        break;
+                    case 'mcp':
+                        document.getElementById('conn2').style.opacity = '1';
+                        document.getElementById('conn5').style.opacity = '1';
+                        break;
+                    case 'synapse':
+                        document.getElementById('conn3').style.opacity = '1';
+                        break;
+                    case 'monitoring':
+                        document.getElementById('conn4').style.opacity = '1';
+                        break;
+                }
+            });
+            
+            comp.addEventListener('mouseleave', () => {
+                document.querySelectorAll('.connector').forEach(conn => conn.style.opacity = '1');
+            });
+        });
+    </script>
+</body>
+</html>
